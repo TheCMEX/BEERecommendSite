@@ -1,21 +1,15 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-import json
-
+from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, render_to_response
 from django.views import View
-from django.views.decorators.csrf import csrf_exempt
 
 from main.models import *
 
 
 def homepage(request):
-    if request.user.is_authenticated():
-        logged = True
-    else:
-        logged =  False
-    return render(request, 'homepage.html', {'logged': logged, 'username': request.user.username})
+    return render(request, 'homepage.html')
 
 
 class RegisterView(View):
@@ -64,7 +58,7 @@ class LoginView(View):
         user = authenticate(request, username=name, password=password)
         if user is not None:
             login(request, user)
-            return render(request, 'homepage.html', {'username': name, 'logged': True})
+            return render(request, 'homepage.html', {'logged': True, 'username': name})
         else:
             return render(request, 'login.html', {'error': 'Такой пользователь уже существует'})
 
@@ -92,19 +86,15 @@ class make_url(View):
     def get(self, request, name):
         name = name.replace('_', ' ')
         beer = Beer.objects.get(name_lower=name)
-        if request.user.is_authenticated():
-            logged = True
-        else:
-            logged = False
-        return render_to_response('pivo.html', {'beer': beer, 'username': request.user.username, 'logged': logged})
+        return render_to_response('pivo.html', {'beer': beer})
 
 
 @login_required
-@csrf_exempt
 def apimark(request):
-
     beer_id = request.POST['beer_id']
     mark = request.POST['mark']
-    beer_name = '/'+request.POST['beer_name'].replace(' ', '_').lower()
-    Recommendation.objects.update_or_create(beer_id=beer_id, user=request.user, defaults={'mark': mark})
+    beer_name = request.POST['beer_name'].replace(' ', '_')
+    #bla = [request.GET['beer_id'], request.GET['mark'], request.user]
+    Recommendation.objects.update_or_create(beer=beer_id, user=request.user, defaults={'mark': mark})
+    #return render(request, 'homepage.html', {'bla': bla})
     return redirect(beer_name)

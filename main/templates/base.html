@@ -8,17 +8,15 @@
 </head>
 <body>
 <div class = 'header'>
-
+    <a href="/"><div id="home_url"></div></a>
     {% if logged %}
-        <div class="logout">
-        <p>{{ username }}</p>
-        <p><a href="/logout"><strong>выйти</strong></a></p>
-        </div>
+    <p>{{ username }}</p>
+    <a href="/logout"><div><strong>выйти</strong></div></a>
+
     {%else%}
     <a href="/register"><div class="header-btn"><strong>Регистрация</strong></div></a>
     <a href="/login"><div id="header_btn" class="header-btn"><strong>Вход</strong></div></a>
     {% endif %}
-    <a href="/"><div id="home_url"></div></a>
 </div>
     {% block body %}
     {% endblock %}
