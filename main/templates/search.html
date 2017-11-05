@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Результаты поиска
+{% endblock %}
+
+{% block body %}
+    <div class="search">
+        <form method="get" action="/search">
+            <input style="padding-right: 50px" type="text" name="search_field" value="{% if search_field == '' %}All{% else %}{{ search_field }}{% endif %}" placeholder="Поиск">
+            <input type="submit" value="Поиск">
+        </form>
+    </div>
+    <div class="search_res">
+        <p style="margin-top: 100px; margin-left: 20px">Результаты поиска:</p>
+    <ul>
+    {% for i in answer %}
+        <li>
+            {{ i|safe }}
+        </li>
+    {% endfor %}
+    </ul>
+    </div>
+{% endblock %}

@@ -1,0 +1,183 @@
+#home_url {
+    position: absolute;
+    height: 100%;
+    width: 40%;
+}
+body form{
+    text-align: center;
+}
+
+.search form{
+    margin: 0;
+    padding: 10px;
+    text-align: left;
+}
+
+body{
+    background: url('../img/background.jpg') repeat;
+    margin: 0;
+}
+
+.block{
+    position: relative;
+}
+
+.block img{
+    margin: 5px;
+}
+
+.block p{
+    padding-top: 20px;
+    text-indent: 50px;
+    font-size: 40px;
+}
+
+#beer_name{
+    width: 100%;
+    position: absolute;
+    margin: 10% 60% auto 40%;
+    font-size: 70px;
+}
+
+.block h1{
+    margin-left: 60%;
+    margin-right: 40%;
+    position: absolute;
+}
+
+.error{
+    margin-top: 7%;
+    margin-left: 42.3%;
+    position: absolute;
+    color: red;
+    font-weight: bold;
+    font-size: 25px;
+    letter-spacing: 1px;
+}
+
+.header{
+    display: block;
+    background: url('../img/header.jpg') no-repeat top;
+    height: 200px;
+    position: relative;
+}
+
+.header-btn{
+    color: #432f03;
+    letter-spacing: 1px;
+    font-family: Arial;
+    font-size: 42px;
+    position: absolute;
+    background: #efac19;
+    background: -moz-linear-gradient(top,  #efac19 44%, #b34525 100%);
+    background: -webkit-linear-gradient(top,  #efac19 44%,#b34525 100%);
+    background: linear-gradient(to bottom,  #efac19 44%,#b34525 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#efac19', endColorstr='#b34525',GradientType=0 );
+    margin-left: 80%;
+    margin-right: 20%;
+    margin-top: 80px;
+    border-radius: 10px;
+    padding: 5px;
+    transition: 0.3s;
+}
+
+.header-btn:hover{
+    transition: 0.3s;
+    margin-top: 75px;
+}
+
+#header_btn {
+    margin-right: 30%;
+    margin-left: 70%;
+}
+
+
+form{
+    margin-left: 40%;
+    position: absolute;
+    text-align: center;
+    margin-top: 8%;
+    font-size: 30px;
+    font-family: "Arial";
+
+}
+form input{
+    padding-top: 8px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    font-size: 20px;
+    margin: 0;
+    pbackground-color: burlywood;
+
+}
+form span{
+    letter-spacing: 2px;
+    font-weight: bold;
+    color: #432f03;
+}
+
+form p{
+    margin: 13px;
+}
+
+li{
+    list-style-type: none;
+    margin-left: 1%;
+}
+
+.search_res{
+    text-align: left;
+    font-family: Arial, cursive;
+    font-size: 32px;
+
+}
+
+a{
+    text-decoration: none;
+    color: black;
+}
+
+a:hover{
+    text-decoration: underline;
+    color: saddlebrown;
+}
+
+.recommend{
+    background-color: chartreuse;
+    position: absolute;
+    width: 100%;
+    text-align: right;
+}
+.recommend form{
+    margin: 20px 20px 0 80%;
+}
+.recommend form input{
+    margin-top: 20px;
+}
+
+#mark{
+    width: 100px;
+}
+
+.logout{
+    position: absolute;
+    width: 100%;
+    text-align: right;
+}
+.logout p{
+    padding-right: 20px;
+    color: antiquewhite;
+    font-size: 32px;
+}
+
+.logout a{
+    background-color: antiquewhite;
+    border-radius: 10px;
+    color: black;
+    font-size: 32px;
+    padding: 10px;
+}
+.logout a:hover{
+    font-size: 32px;
+    text-decoration: underline;
+}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Beer's Home
+{% endblock %}
+
+{% block body %}
+
+
+
+    {{ gyg }}
+    <div class="search">
+        <form method="get" action="/search">
+            <input style="padding-right: 50px" type="text" name="search_field" placeholder="Поиск">
+            <input type="submit" value="Поиск">
+        </form>
+    </div>
+{% endblock %}
