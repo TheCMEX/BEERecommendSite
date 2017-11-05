@@ -7,16 +7,16 @@
 
 {% block body %}
 <div class="block">
-{% if logged %}
+{% if request.user.is_authenticated %}
 <div class="recommend">
     <form method="post" action="/api/mark/">{% csrf_token %}
         <span>Оцените это пиво</span>
-        <input id="mark" name="mark" type="number" value="5" max="10" min="1" required>
+        <input id="mark" name="mark" type="number" value="{{ val }}" max="10" min="1" required>
         <input name="beer_id" value="{{ beer.id }}" hidden>
         <input name="beer_name" value="{{ beer.name }}" hidden>
         <input type="submit" value="Оценить">
     </form>
-</div>{% else %}
+</div>
     {% endif %}
     <strong><span id="beer_name">{{ beer.name }}</span></strong>
     <img src="../static/img/beer.jpg">

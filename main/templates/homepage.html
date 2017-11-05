@@ -6,8 +6,6 @@ Beer's Home
 
 {% block body %}
 
-
-
     {{ gyg }}
     <div class="search">
         <form method="get" action="/search">
@@ -15,4 +13,771 @@ Beer's Home
             <input type="submit" value="Поиск">
         </form>
     </div>
+
+    <style>
+
+.link {
+  stroke: #aaa;
+}
+
+.node {
+  pointer-events: all;
+  stroke: none;
+  stroke-width: 40px;
+}
+
+</style>
+<svg width="2000" height="2000"></svg>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"> </script>
+<script>
+/*
+var nodes = [
+  {"id": 1, "name": "Pivas1"},
+  {"id": 2, "name": "Pivas2"},
+  {"id": 3, "name": "Pivas3"},
+  {"id": 4, "name": "Pivas4"},
+  {"id": 5, "name": "Pivas5"},
+  {"id": 6, "name": "Pivas6"},
+  {"id": 7, "name": "Pivas7"},
+  {"id": 8, "name": "Pivas8"},
+  {"id": 9, "name": "Pivas9"}
+]
+
+var links = [
+  {source: 1, target: 2, distance: 100},
+  {source: 1, target: 3, distance: 200},
+  {source: 1, target: 3, distance: 50},
+  {source: 1, target: 4, distance: 140},
+  {source: 2, target: 5, distance: 130},
+  {source: 2, target: 6, distance: 500},
+  {source: 3, target: 7, distance: 200},
+  {source: 5, target: 8, distance: 230},
+  {source: 6, target: 9, distance: 150},
+]
+*/
+
+//var json = jQuery.getJSON('nodes.json');
+var nodes = [{"id": 0, "name": "American Light Lager"},
+{"id": 1, "name": "American Lager"},
+{"id": 2, "name": "Cream Ale"},
+{"id": 3, "name": "American Wheat Beer"},
+{"id": 4, "name": "International Pale Lager"},
+{"id": 5, "name": "International Amber Lager"},
+{"id": 6, "name": "International Dark Lager"},
+{"id": 7, "name": "Czech Pale Lager"},
+{"id": 8, "name": "Czech Premium Pale Lager"},
+{"id": 9, "name": "Czech Amber Lager"},
+{"id": 10, "name": "Czech Dark Lager"},
+{"id": 11, "name": "Munich Helles"},
+{"id": 12, "name": "Festbier"},
+{"id": 13, "name": "Helles Bock"},
+{"id": 14, "name": "German Leichtbier"},
+{"id": 15, "name": "Kölsch"},
+{"id": 16, "name": "German Helles Exportbier"},
+{"id": 17, "name": "German Pils"},
+{"id": 18, "name": "Märzen"},
+{"id": 19, "name": "Rauchbier"},
+{"id": 20, "name": "Dunkles Bock"},
+{"id": 21, "name": "Vienna Lager"},
+{"id": 22, "name": "Altbier"},
+{"id": 23, "name": "Kellerbier"},
+{"id": 24, "name": "Munich Dunkel"},
+{"id": 25, "name": "Schwarzbier"},
+{"id": 26, "name": "Doppelbock"},
+{"id": 27, "name": "Eisbock"},
+{"id": 28, "name": "Baltic Porter"},
+{"id": 29, "name": "Weissbier"},
+{"id": 30, "name": "Dunkles Weissbier"},
+{"id": 31, "name": "Weizenbock"},
+{"id": 32, "name": "Ordinary Bitter"},
+{"id": 33, "name": "Best Bitter"},
+{"id": 34, "name": "Strong Bitter"},
+{"id": 35, "name": "British Golden Ale"},
+{"id": 36, "name": "Australian Sparkling Ale"},
+{"id": 37, "name": "English IPA"},
+{"id": 38, "name": "Dark Mild"},
+{"id": 39, "name": "British Brown Ale"},
+{"id": 40, "name": "English Porter"},
+{"id": 41, "name": "Scottish Light"},
+{"id": 42, "name": "Scottish Heavy"},
+{"id": 43, "name": "Scottish Export"},
+{"id": 44, "name": "Irish Red Ale"},
+{"id": 45, "name": "Irish Stout"},
+{"id": 46, "name": "Irish Extra Stout"},
+{"id": 47, "name": "Sweet Stout"},
+{"id": 48, "name": "Oatmeal Stout"},
+{"id": 49, "name": "Tropical Stout"},
+{"id": 50, "name": "Foreign Extra Stout"},
+{"id": 51, "name": "British Strong Ale"},
+{"id": 52, "name": "Old Ale"},
+{"id": 53, "name": "Wee Heavy"},
+{"id": 54, "name": "English Barleywine"},
+{"id": 55, "name": "Blonde Ale"},
+{"id": 56, "name": "American Pale Ale"},
+{"id": 57, "name": "American Amber Ale"},
+{"id": 58, "name": "California Common"},
+{"id": 59, "name": "American Brown Ale"},
+{"id": 60, "name": "American Porter"},
+{"id": 61, "name": "American Stout"},
+{"id": 62, "name": "Imperial Stout"},
+{"id": 63, "name": "American IPA"},
+{"id": 64, "name": "Double IPA"},
+{"id": 65, "name": "American Strong Ale"},
+{"id": 66, "name": "American Barleywine"},
+{"id": 67, "name": "Wheatwine"},
+{"id": 68, "name": "Berliner Weisse"},
+{"id": 69, "name": "Flanders Red Ale"},
+{"id": 70, "name": "Oud Bruin"},
+{"id": 71, "name": "Lambic"},
+{"id": 72, "name": "Gueuze"},
+{"id": 73, "name": "Fruit Lambic"},
+{"id": 74, "name": "Witbier"},
+{"id": 75, "name": "Belgian Pale Ale"},
+{"id": 76, "name": "Bière de Garde"},
+{"id": 77, "name": "Belgian Blond Ale"},
+{"id": 78, "name": "Saison"},
+{"id": 79, "name": "Belgian Golden Strong Ale"},
+{"id": 80, "name": "Trappist Single"},
+{"id": 81, "name": "Belgian Dubbel"},
+{"id": 82, "name": "Belgian Tripel"},
+{"id": 83, "name": "Belgian Dark Strong Ale"},
+{"id": 84, "name": "Gose"},
+{"id": 85, "name": "Kentucky Common"},
+{"id": 86, "name": "Lichtenhainer"},
+{"id": 87, "name": "London Brown Ale"},
+{"id": 88, "name": "Piwo Grodziskie"},
+{"id": 89, "name": "Pre-Prohibition Lager"},
+{"id": 90, "name": "Pre-Prohibition Porter"},
+{"id": 91, "name": "Roggenbier"},
+{"id": 92, "name": "Sahti"},
+{"id": 93, "name": "Brett Beer"},
+{"id": 94, "name": "Mixed-Fermentation Sour Beer"},
+{"id": 95, "name": "Wild Specialty Beer"},
+{"id": 96, "name": "Autumn Seasonal Beer"},
+{"id": 97, "name": "Winter Seasonal Beer"},
+{"id": 98, "name": "Classic Style Smoked Beer"},
+{"id": 99, "name": "Specialty Smoked Beer"},
+{"id": 100, "name": "Wood-Aged Beer"},
+{"id": 101, "name": "Specialty Wood-Aged Beer"},
+]
+//alert(nodes);
+//var json = jQuery.getJSON('links.json');
+var links = [{source: 0, target: 1, distance: 86.52999021979943},
+{source: 0, target: 7, distance: 49.491167282513125},
+{source: 0, target: 14, distance: 47.90773421377397},
+{source: 0, target: 17, distance: 80.59748667054289},
+{source: 1, target: 0, distance: 86.52999021979943},
+{source: 1, target: 7, distance: 81.94841013206407},
+{source: 1, target: 14, distance: 79.28325000898384},
+{source: 1, target: 17, distance: 31.4879774511519},
+{source: 2, target: 73, distance: 97.78872760265489},
+{source: 2, target: 84, distance: 84.79396080344506},
+{source: 2, target: 86, distance: 78.31387420669635},
+{source: 3, target: 55, distance: 19.250973754219025},
+{source: 3, target: 80, distance: 75.60431096189778},
+{source: 4, target: 7, distance: 69.53699204538252},
+{source: 4, target: 8, distance: 68.61363058378126},
+{source: 4, target: 14, distance: 70.41856886269548},
+{source: 4, target: 17, distance: 70.72181009147889},
+{source: 5, target: 6, distance: 58.09982612274714},
+{source: 5, target: 13, distance: 97.11179474453161},
+{source: 5, target: 20, distance: 94.47682134554489},
+{source: 5, target: 24, distance: 81.20506788696107},
+{source: 5, target: 26, distance: 60.79539539430755},
+{source: 5, target: 27, distance: 40.715909461237246},
+{source: 6, target: 5, distance: 58.09982612274714},
+{source: 6, target: 13, distance: 84.56319850479642},
+{source: 6, target: 24, distance: 96.50748374544187},
+{source: 6, target: 27, distance: 98.00940740153625},
+{source: 7, target: 0, distance: 49.491167282513125},
+{source: 7, target: 1, distance: 81.94841013206407},
+{source: 7, target: 4, distance: 69.53699204538252},
+{source: 7, target: 14, distance: 2.8958843899520215},
+{source: 7, target: 17, distance: 58.82768484249835},
+{source: 8, target: 4, distance: 68.61363058378126},
+{source: 8, target: 16, distance: 81.78343860222893},
+{source: 8, target: 17, distance: 82.39774170802124},
+{source: 9, target: 10, distance: 64.81505584577825},
+{source: 9, target: 11, distance: 95.17051109555999},
+{source: 9, target: 12, distance: 61.7957050501981},
+{source: 9, target: 13, distance: 83.35392592933152},
+{source: 9, target: 21, distance: 10.8552738181597},
+{source: 9, target: 25, distance: 54.105015087839845},
+{source: 10, target: 9, distance: 64.81505584577825},
+{source: 10, target: 12, distance: 82.54773070693443},
+{source: 10, target: 21, distance: 69.46271770290986},
+{source: 10, target: 25, distance: 11.75444883877645},
+{source: 11, target: 9, distance: 95.17051109555999},
+{source: 11, target: 12, distance: 34.99553108408023},
+{source: 12, target: 9, distance: 61.7957050501981},
+{source: 12, target: 10, distance: 82.54773070693443},
+{source: 12, target: 11, distance: 34.99553108408023},
+{source: 12, target: 21, distance: 72.43423879277958},
+{source: 12, target: 25, distance: 72.13037012180091},
+{source: 13, target: 5, distance: 97.11179474453161},
+{source: 13, target: 6, distance: 84.56319850479642},
+{source: 13, target: 9, distance: 83.35392592933152},
+{source: 13, target: 19, distance: 93.31217186883768},
+{source: 13, target: 21, distance: 73.15129237699594},
+{source: 13, target: 24, distance: 43.12885338204454},
+{source: 13, target: 26, distance: 96.12380315601027},
+{source: 14, target: 0, distance: 47.90773421377397},
+{source: 14, target: 1, distance: 79.28325000898384},
+{source: 14, target: 4, distance: 70.41856886269548},
+{source: 14, target: 7, distance: 2.8958843899520215},
+{source: 14, target: 17, distance: 56.651302607005626},
+{source: 16, target: 8, distance: 81.78343860222893},
+{source: 17, target: 0, distance: 80.59748667054289},
+{source: 17, target: 1, distance: 31.4879774511519},
+{source: 17, target: 4, distance: 70.72181009147889},
+{source: 17, target: 7, distance: 58.82768484249835},
+{source: 17, target: 8, distance: 82.39774170802124},
+{source: 17, target: 14, distance: 56.651302607005626},
+{source: 18, target: 19, distance: 16.71305639173982},
+{source: 18, target: 24, distance: 63.52845401149766},
+{source: 18, target: 26, distance: 54.773870666881585},
+{source: 19, target: 13, distance: 93.31217186883768},
+{source: 19, target: 18, distance: 16.71305639173982},
+{source: 19, target: 24, distance: 54.304365150046905},
+{source: 19, target: 26, distance: 61.81428288470269},
+{source: 20, target: 5, distance: 94.47682134554489},
+{source: 20, target: 26, distance: 90.50342327197717},
+{source: 20, target: 27, distance: 53.86767742128704},
+{source: 21, target: 9, distance: 10.8552738181597},
+{source: 21, target: 10, distance: 69.46271770290986},
+{source: 21, target: 12, distance: 72.43423879277958},
+{source: 21, target: 13, distance: 73.15129237699594},
+{source: 21, target: 24, distance: 98.28682095314443},
+{source: 21, target: 25, distance: 59.631685403982395},
+{source: 22, target: 28, distance: 93.01732853822554},
+{source: 22, target: 29, distance: 65.30059246606531},
+{source: 22, target: 76, distance: 86.31751413048204},
+{source: 24, target: 5, distance: 81.20506788696107},
+{source: 24, target: 6, distance: 96.50748374544187},
+{source: 24, target: 13, distance: 43.12885338204454},
+{source: 24, target: 18, distance: 63.52845401149766},
+{source: 24, target: 19, distance: 54.304365150046905},
+{source: 24, target: 21, distance: 98.28682095314443},
+{source: 24, target: 26, distance: 57.192142967070986},
+{source: 25, target: 9, distance: 54.105015087839845},
+{source: 25, target: 10, distance: 11.75444883877645},
+{source: 25, target: 12, distance: 72.13037012180091},
+{source: 25, target: 21, distance: 59.631685403982395},
+{source: 26, target: 5, distance: 60.79539539430755},
+{source: 26, target: 13, distance: 96.12380315601027},
+{source: 26, target: 18, distance: 54.773870666881585},
+{source: 26, target: 19, distance: 61.81428288470269},
+{source: 26, target: 20, distance: 90.50342327197717},
+{source: 26, target: 24, distance: 57.192142967070986},
+{source: 26, target: 27, distance: 56.54681000130076},
+{source: 27, target: 5, distance: 40.715909461237246},
+{source: 27, target: 6, distance: 98.00940740153625},
+{source: 27, target: 20, distance: 53.86767742128704},
+{source: 27, target: 26, distance: 56.54681000130076},
+{source: 28, target: 22, distance: 93.01732853822554},
+{source: 28, target: 30, distance: 21.853467117805597},
+{source: 28, target: 31, distance: 44.97508111180855},
+{source: 28, target: 76, distance: 63.978185356619704},
+{source: 29, target: 22, distance: 65.30059246606531},
+{source: 29, target: 69, distance: 63.79825545652051},
+{source: 30, target: 28, distance: 21.853467117805597},
+{source: 30, target: 31, distance: 33.61938400567747},
+{source: 30, target: 76, distance: 78.01544137971335},
+{source: 31, target: 28, distance: 44.97508111180855},
+{source: 31, target: 30, distance: 33.61938400567747},
+{source: 32, target: 33, distance: 80.47838340708319},
+{source: 32, target: 34, distance: 2.10760487681584},
+{source: 32, target: 45, distance: 72.48834790308484},
+{source: 32, target: 46, distance: 79.78346668246755},
+{source: 32, target: 50, distance: 23.85882936872851},
+{source: 32, target: 87, distance: 23.10505556611209},
+{source: 33, target: 32, distance: 80.47838340708319},
+{source: 33, target: 34, distance: 79.47086160126241},
+{source: 33, target: 45, distance: 71.1798428013003},
+{source: 33, target: 48, distance: 21.57683785469},
+{source: 33, target: 83, distance: 87.87431202245621},
+{source: 33, target: 87, distance: 90.71963219114733},
+{source: 34, target: 32, distance: 2.10760487681584},
+{source: 34, target: 33, distance: 79.47086160126241},
+{source: 34, target: 45, distance: 73.43492490696072},
+{source: 34, target: 46, distance: 81.75139613245112},
+{source: 34, target: 50, distance: 23.689053416167862},
+{source: 34, target: 87, distance: 25.18284684894132},
+{source: 35, target: 57, distance: 33.23798335601335},
+{source: 35, target: 59, distance: 37.18473015148868},
+{source: 35, target: 67, distance: 56.28536694309301},
+{source: 36, target: 72, distance: 68.52319050155516},
+{source: 36, target: 74, distance: 53.29437258397463},
+{source: 36, target: 78, distance: 33.037392659354325},
+{source: 36, target: 85, distance: 70.3987635837813},
+{source: 36, target: 88, distance: 75.50683302471978},
+{source: 36, target: 90, distance: 35.05806093224484},
+{source: 36, target: 98, distance: 93.57713581408727},
+{source: 36, target: 99, distance: 94.4581461488477},
+{source: 36, target: 100, distance: 93.3480891186722},
+{source: 36, target: 101, distance: 92.65297655956363},
+{source: 37, target: 82, distance: 95.86479479458683},
+{source: 38, target: 40, distance: 42.639659243703164},
+{source: 38, target: 41, distance: 96.14287312545223},
+{source: 38, target: 42, distance: 96.14287312545223},
+{source: 38, target: 43, distance: 98.44290101983},
+{source: 38, target: 47, distance: 14.925975502032513},
+{source: 38, target: 50, distance: 90.27740069670138},
+{source: 38, target: 51, distance: 69.74991958442413},
+{source: 38, target: 52, distance: 66.87075074607864},
+{source: 38, target: 53, distance: 85.20221541373763},
+{source: 38, target: 54, distance: 34.68953774708445},
+{source: 38, target: 81, distance: 90.34309902145903},
+{source: 39, target: 40, distance: 68.57348829145292},
+{source: 39, target: 43, distance: 53.23999488355292},
+{source: 39, target: 47, distance: 98.56648722731572},
+{source: 39, target: 81, distance: 46.91101873498157},
+{source: 39, target: 83, distance: 82.81452545853809},
+{source: 40, target: 38, distance: 42.639659243703164},
+{source: 40, target: 39, distance: 68.57348829145292},
+{source: 40, target: 43, distance: 87.29095167151513},
+{source: 40, target: 47, distance: 49.152259324760884},
+{source: 40, target: 52, distance: 99.68351627990889},
+{source: 40, target: 54, distance: 70.9136510102316},
+{source: 40, target: 81, distance: 47.88966082420498},
+{source: 40, target: 83, distance: 78.29671460271358},
+{source: 41, target: 38, distance: 96.14287312545223},
+{source: 41, target: 43, distance: 82.35933331204491},
+{source: 41, target: 47, distance: 81.29321333296988},
+{source: 41, target: 51, distance: 36.25655213445998},
+{source: 41, target: 52, distance: 37.92163777497208},
+{source: 41, target: 53, distance: 25.74860878360771},
+{source: 41, target: 54, distance: 64.72529256547142},
+{source: 42, target: 38, distance: 96.14287312545223},
+{source: 42, target: 43, distance: 82.35933331204491},
+{source: 42, target: 47, distance: 81.29321333296988},
+{source: 42, target: 51, distance: 36.25655213445998},
+{source: 42, target: 52, distance: 37.92163777497208},
+{source: 42, target: 53, distance: 25.74860878360771},
+{source: 42, target: 54, distance: 64.72529256547142},
+{source: 43, target: 38, distance: 98.44290101983},
+{source: 43, target: 39, distance: 53.23999488355292},
+{source: 43, target: 40, distance: 87.29095167151513},
+{source: 43, target: 41, distance: 82.35933331204491},
+{source: 43, target: 42, distance: 82.35933331204491},
+{source: 43, target: 47, distance: 88.46589781088853},
+{source: 43, target: 51, distance: 96.46749064851268},
+{source: 43, target: 52, distance: 95.36102148548677},
+{source: 43, target: 53, distance: 99.11519772542874},
+{source: 43, target: 54, distance: 92.70992024264616},
+{source: 43, target: 81, distance: 92.52140861249156},
+{source: 44, target: 48, distance: 86.96348398553985},
+{source: 44, target: 70, distance: 55.80118527702376},
+{source: 44, target: 81, distance: 93.97322914884201},
+{source: 44, target: 83, distance: 55.14505966346208},
+{source: 45, target: 32, distance: 72.48834790308484},
+{source: 45, target: 33, distance: 71.1798428013003},
+{source: 45, target: 34, distance: 73.43492490696072},
+{source: 45, target: 48, distance: 82.38041765053536},
+{source: 45, target: 50, distance: 95.38494320916952},
+{source: 45, target: 87, distance: 61.793381890786726},
+{source: 46, target: 32, distance: 79.78346668246755},
+{source: 46, target: 34, distance: 81.75139613245112},
+{source: 46, target: 50, distance: 77.50705592864405},
+{source: 46, target: 87, distance: 61.235504752506195},
+{source: 47, target: 38, distance: 14.925975502032513},
+{source: 47, target: 39, distance: 98.56648722731572},
+{source: 47, target: 40, distance: 49.152259324760884},
+{source: 47, target: 41, distance: 81.29321333296988},
+{source: 47, target: 42, distance: 81.29321333296988},
+{source: 47, target: 43, distance: 88.46589781088853},
+{source: 47, target: 51, distance: 56.28675952596351},
+{source: 47, target: 52, distance: 53.40250972047964},
+{source: 47, target: 53, distance: 71.37256436620608},
+{source: 47, target: 54, distance: 22.185517513687223},
+{source: 47, target: 81, distance: 94.88047727222761},
+{source: 48, target: 33, distance: 21.57683785469},
+{source: 48, target: 44, distance: 86.96348398553985},
+{source: 48, target: 45, distance: 82.38041765053536},
+{source: 48, target: 83, distance: 85.46534942037661},
+{source: 49, target: 51, distance: 77.23390593933964},
+{source: 49, target: 52, distance: 78.58986767126498},
+{source: 49, target: 53, distance: 76.44976615097896},
+{source: 49, target: 54, distance: 95.36415451115622},
+{source: 50, target: 32, distance: 23.85882936872851},
+{source: 50, target: 34, distance: 23.689053416167862},
+{source: 50, target: 38, distance: 90.27740069670138},
+{source: 50, target: 45, distance: 95.38494320916952},
+{source: 50, target: 46, distance: 77.50705592864405},
+{source: 50, target: 87, distance: 37.80973845123395},
+{source: 51, target: 38, distance: 69.74991958442413},
+{source: 51, target: 41, distance: 36.25655213445998},
+{source: 51, target: 42, distance: 36.25655213445998},
+{source: 51, target: 43, distance: 96.46749064851268},
+{source: 51, target: 47, distance: 56.28675952596351},
+{source: 51, target: 49, distance: 77.23390593933964},
+{source: 51, target: 52, distance: 2.886110072315751},
+{source: 51, target: 53, distance: 15.862372129041194},
+{source: 51, target: 54, distance: 35.142902559203314},
+{source: 52, target: 38, distance: 66.87075074607864},
+{source: 52, target: 40, distance: 99.68351627990889},
+{source: 52, target: 41, distance: 37.92163777497208},
+{source: 52, target: 42, distance: 37.92163777497208},
+{source: 52, target: 43, distance: 95.36102148548677},
+{source: 52, target: 47, distance: 53.40250972047964},
+{source: 52, target: 49, distance: 78.58986767126498},
+{source: 52, target: 51, distance: 2.886110072315751},
+{source: 52, target: 53, distance: 18.623953198892245},
+{source: 52, target: 54, distance: 32.27799861628277},
+{source: 53, target: 38, distance: 85.20221541373763},
+{source: 53, target: 41, distance: 25.74860878360771},
+{source: 53, target: 42, distance: 25.74860878360771},
+{source: 53, target: 43, distance: 99.11519772542874},
+{source: 53, target: 47, distance: 71.37256436620608},
+{source: 53, target: 49, distance: 76.44976615097896},
+{source: 53, target: 51, distance: 15.862372129041194},
+{source: 53, target: 52, distance: 18.623953198892245},
+{source: 53, target: 54, distance: 50.77818460334234},
+{source: 54, target: 38, distance: 34.68953774708445},
+{source: 54, target: 40, distance: 70.9136510102316},
+{source: 54, target: 41, distance: 64.72529256547142},
+{source: 54, target: 42, distance: 64.72529256547142},
+{source: 54, target: 43, distance: 92.70992024264616},
+{source: 54, target: 47, distance: 22.185517513687223},
+{source: 54, target: 49, distance: 95.36415451115622},
+{source: 54, target: 51, distance: 35.142902559203314},
+{source: 54, target: 52, distance: 32.27799861628277},
+{source: 54, target: 53, distance: 50.77818460334234},
+{source: 55, target: 3, distance: 19.250973754219025},
+{source: 55, target: 80, distance: 60.900938915714015},
+{source: 56, target: 64, distance: 95.32145999668339},
+{source: 56, target: 94, distance: 91.5540585382987},
+{source: 56, target: 95, distance: 73.82697238844713},
+{source: 57, target: 35, distance: 33.23798335601335},
+{source: 57, target: 59, distance: 62.56429894052618},
+{source: 57, target: 67, distance: 72.22099651100699},
+{source: 58, target: 68, distance: 89.66259600239539},
+{source: 58, target: 71, distance: 28.213980973645544},
+{source: 58, target: 72, distance: 90.70436518782643},
+{source: 58, target: 73, distance: 38.297362356183974},
+{source: 58, target: 84, distance: 94.4370512210945},
+{source: 58, target: 86, distance: 95.78249078042965},
+{source: 58, target: 91, distance: 62.470605376394644},
+{source: 59, target: 35, distance: 37.18473015148868},
+{source: 59, target: 57, distance: 62.56429894052618},
+{source: 59, target: 67, distance: 85.14438552442843},
+{source: 59, target: 93, distance: 79.59738848249302},
+{source: 59, target: 94, distance: 95.75097684424897},
+{source: 60, target: 65, distance: 99.9394987667918},
+{source: 60, target: 66, distance: 68.06730407288893},
+{source: 60, target: 67, distance: 62.84429383688867},
+{source: 61, target: 65, distance: 52.11207025838891},
+{source: 61, target: 66, distance: 71.79098095551521},
+{source: 63, target: 64, distance: 48.20031189293753},
+{source: 64, target: 56, distance: 95.32145999668339},
+{source: 64, target: 63, distance: 48.20031189293753},
+{source: 65, target: 60, distance: 99.9394987667918},
+{source: 65, target: 61, distance: 52.11207025838891},
+{source: 65, target: 66, distance: 38.5728360946764},
+{source: 66, target: 60, distance: 68.06730407288893},
+{source: 66, target: 61, distance: 71.79098095551521},
+{source: 66, target: 65, distance: 38.5728360946764},
+{source: 67, target: 35, distance: 56.28536694309301},
+{source: 67, target: 57, distance: 72.22099651100699},
+{source: 67, target: 59, distance: 85.14438552442843},
+{source: 67, target: 60, distance: 62.84429383688867},
+{source: 68, target: 58, distance: 89.66259600239539},
+{source: 68, target: 69, distance: 75.90388967982621},
+{source: 68, target: 72, distance: 43.75410797506831},
+{source: 68, target: 74, distance: 60.35374934104376},
+{source: 68, target: 91, distance: 61.319791085247324},
+{source: 69, target: 29, distance: 63.79825545652051},
+{source: 69, target: 68, distance: 75.90388967982621},
+{source: 69, target: 91, distance: 82.4617322198873},
+{source: 70, target: 44, distance: 55.80118527702376},
+{source: 71, target: 58, distance: 28.213980973645544},
+{source: 71, target: 73, distance: 12.22435852860091},
+{source: 71, target: 84, distance: 84.61173046536278},
+{source: 71, target: 86, distance: 84.07260831238659},
+{source: 71, target: 91, distance: 85.67249229606249},
+{source: 72, target: 36, distance: 68.52319050155516},
+{source: 72, target: 58, distance: 90.70436518782643},
+{source: 72, target: 68, distance: 43.75410797506831},
+{source: 72, target: 74, distance: 24.246550657790728},
+{source: 72, target: 78, distance: 76.21959157617587},
+{source: 72, target: 90, distance: 69.68881101024685},
+{source: 72, target: 91, distance: 92.02810115210602},
+{source: 73, target: 2, distance: 97.78872760265489},
+{source: 73, target: 58, distance: 38.297362356183974},
+{source: 73, target: 71, distance: 12.22435852860091},
+{source: 73, target: 84, distance: 75.27362753557303},
+{source: 73, target: 86, distance: 74.12653146442571},
+{source: 73, target: 91, distance: 97.66109697002227},
+{source: 74, target: 36, distance: 53.29437258397463},
+{source: 74, target: 68, distance: 60.35374934104376},
+{source: 74, target: 72, distance: 24.246550657790728},
+{source: 74, target: 77, distance: 90.16228542933874},
+{source: 74, target: 78, distance: 53.50219956014626},
+{source: 74, target: 90, distance: 46.42927195545415},
+{source: 75, target: 77, distance: 83.13012957220243},
+{source: 75, target: 92, distance: 75.55521164472216},
+{source: 76, target: 22, distance: 86.31751413048204},
+{source: 76, target: 28, distance: 63.978185356619704},
+{source: 76, target: 30, distance: 78.01544137971335},
+{source: 77, target: 74, distance: 90.16228542933874},
+{source: 77, target: 75, distance: 83.13012957220243},
+{source: 77, target: 78, distance: 79.81458600484426},
+{source: 77, target: 79, distance: 91.88191706638483},
+{source: 77, target: 82, distance: 82.17023099275251},
+{source: 77, target: 90, distance: 75.65248063476899},
+{source: 77, target: 92, distance: 93.75839434729377},
+{source: 78, target: 36, distance: 33.037392659354325},
+{source: 78, target: 72, distance: 76.21959157617587},
+{source: 78, target: 74, distance: 53.50219956014626},
+{source: 78, target: 77, distance: 79.81458600484426},
+{source: 78, target: 79, distance: 82.34328368509121},
+{source: 78, target: 85, distance: 68.46497904629004},
+{source: 78, target: 90, distance: 8.038936102106438},
+{source: 79, target: 77, distance: 91.88191706638483},
+{source: 79, target: 78, distance: 82.34328368509121},
+{source: 79, target: 82, distance: 39.97784986258204},
+{source: 79, target: 85, distance: 73.2780977709691},
+{source: 79, target: 90, distance: 87.23852538421568},
+{source: 80, target: 3, distance: 75.60431096189778},
+{source: 80, target: 55, distance: 60.900938915714015},
+{source: 81, target: 38, distance: 90.34309902145903},
+{source: 81, target: 39, distance: 46.91101873498157},
+{source: 81, target: 40, distance: 47.88966082420498},
+{source: 81, target: 43, distance: 92.52140861249156},
+{source: 81, target: 44, distance: 93.97322914884201},
+{source: 81, target: 47, distance: 94.88047727222761},
+{source: 81, target: 83, distance: 40.455193733999224},
+{source: 82, target: 37, distance: 95.86479479458683},
+{source: 82, target: 77, distance: 82.17023099275251},
+{source: 82, target: 79, distance: 39.97784986258204},
+{source: 83, target: 33, distance: 87.87431202245621},
+{source: 83, target: 39, distance: 82.81452545853809},
+{source: 83, target: 40, distance: 78.29671460271358},
+{source: 83, target: 44, distance: 55.14505966346208},
+{source: 83, target: 48, distance: 85.46534942037661},
+{source: 83, target: 81, distance: 40.455193733999224},
+{source: 84, target: 2, distance: 84.79396080344506},
+{source: 84, target: 58, distance: 94.4370512210945},
+{source: 84, target: 71, distance: 84.61173046536278},
+{source: 84, target: 73, distance: 75.27362753557303},
+{source: 84, target: 86, distance: 6.4858673003109315},
+{source: 85, target: 36, distance: 70.3987635837813},
+{source: 85, target: 78, distance: 68.46497904629004},
+{source: 85, target: 79, distance: 73.2780977709691},
+{source: 85, target: 88, distance: 80.92938796963148},
+{source: 85, target: 90, distance: 76.49659555910662},
+{source: 85, target: 96, distance: 65.34480801704288},
+{source: 85, target: 97, distance: 64.69190568927931},
+{source: 85, target: 98, distance: 67.6675587480316},
+{source: 85, target: 99, distance: 68.79031602250733},
+{source: 85, target: 100, distance: 58.47387633755621},
+{source: 85, target: 101, distance: 57.073271580216606},
+{source: 86, target: 2, distance: 78.31387420669635},
+{source: 86, target: 58, distance: 95.78249078042965},
+{source: 86, target: 71, distance: 84.07260831238659},
+{source: 86, target: 73, distance: 74.12653146442571},
+{source: 86, target: 84, distance: 6.4858673003109315},
+{source: 87, target: 32, distance: 23.10505556611209},
+{source: 87, target: 33, distance: 90.71963219114733},
+{source: 87, target: 34, distance: 25.18284684894132},
+{source: 87, target: 45, distance: 61.793381890786726},
+{source: 87, target: 46, distance: 61.235504752506195},
+{source: 87, target: 50, distance: 37.80973845123395},
+{source: 88, target: 36, distance: 75.50683302471978},
+{source: 88, target: 85, distance: 80.92938796963148},
+{source: 88, target: 96, distance: 51.579652118103915},
+{source: 88, target: 97, distance: 53.371641474438384},
+{source: 88, target: 98, distance: 35.76493251533231},
+{source: 88, target: 99, distance: 35.80148586575356},
+{source: 88, target: 100, distance: 45.04893113983673},
+{source: 88, target: 101, distance: 45.643232889033264},
+{source: 90, target: 36, distance: 35.05806093224484},
+{source: 90, target: 72, distance: 69.68881101024685},
+{source: 90, target: 74, distance: 46.42927195545415},
+{source: 90, target: 77, distance: 75.65248063476899},
+{source: 90, target: 78, distance: 8.038936102106438},
+{source: 90, target: 79, distance: 87.23852538421568},
+{source: 90, target: 85, distance: 76.49659555910662},
+{source: 91, target: 58, distance: 62.470605376394644},
+{source: 91, target: 68, distance: 61.319791085247324},
+{source: 91, target: 69, distance: 82.4617322198873},
+{source: 91, target: 71, distance: 85.67249229606249},
+{source: 91, target: 72, distance: 92.02810115210602},
+{source: 91, target: 73, distance: 97.66109697002227},
+{source: 92, target: 75, distance: 75.55521164472216},
+{source: 92, target: 77, distance: 93.75839434729377},
+{source: 93, target: 59, distance: 79.59738848249302},
+{source: 93, target: 94, distance: 21.990933204875095},
+{source: 93, target: 95, distance: 40.151573092738566},
+{source: 94, target: 56, distance: 91.5540585382987},
+{source: 94, target: 59, distance: 95.75097684424897},
+{source: 94, target: 93, distance: 21.990933204875095},
+{source: 94, target: 95, distance: 18.16823069301637},
+{source: 95, target: 56, distance: 73.82697238844713},
+{source: 95, target: 93, distance: 40.151573092738566},
+{source: 95, target: 94, distance: 18.16823069301637},
+{source: 96, target: 85, distance: 65.34480801704288},
+{source: 96, target: 88, distance: 51.579652118103915},
+{source: 96, target: 97, distance: 1.9495045448800326},
+{source: 96, target: 98, distance: 15.894935526996047},
+{source: 96, target: 99, distance: 16.0534059347035},
+{source: 96, target: 100, distance: 9.84394020210007},
+{source: 96, target: 101, distance: 10.616766738774023},
+{source: 97, target: 85, distance: 64.69190568927931},
+{source: 97, target: 88, distance: 53.371641474438384},
+{source: 97, target: 96, distance: 1.9495045448800326},
+{source: 97, target: 98, distance: 17.751346876107476},
+{source: 97, target: 99, distance: 17.945284461430703},
+{source: 97, target: 100, distance: 10.732881864884533},
+{source: 97, target: 101, distance: 11.292891227307097},
+{source: 98, target: 36, distance: 93.57713581408727},
+{source: 98, target: 85, distance: 67.6675587480316},
+{source: 98, target: 88, distance: 35.76493251533231},
+{source: 98, target: 96, distance: 15.894935526996047},
+{source: 98, target: 97, distance: 17.751346876107476},
+{source: 98, target: 99, distance: 1.1369759717277281},
+{source: 98, target: 100, distance: 12.009733432085332},
+{source: 98, target: 101, distance: 13.244358953782173},
+{source: 99, target: 36, distance: 94.4581461488477},
+{source: 99, target: 85, distance: 68.79031602250733},
+{source: 99, target: 88, distance: 35.80148586575356},
+{source: 99, target: 96, distance: 16.0534059347035},
+{source: 99, target: 97, distance: 17.945284461430703},
+{source: 99, target: 98, distance: 1.1369759717277281},
+{source: 99, target: 100, distance: 12.828311880638271},
+{source: 99, target: 101, distance: 14.103376651929871},
+{source: 100, target: 36, distance: 93.3480891186722},
+{source: 100, target: 85, distance: 58.47387633755621},
+{source: 100, target: 88, distance: 45.04893113983673},
+{source: 100, target: 96, distance: 9.84394020210007},
+{source: 100, target: 97, distance: 10.732881864884533},
+{source: 100, target: 98, distance: 12.009733432085332},
+{source: 100, target: 99, distance: 12.828311880638271},
+{source: 100, target: 101, distance: 1.4308337439959533},
+{source: 101, target: 36, distance: 92.65297655956363},
+{source: 101, target: 85, distance: 57.073271580216606},
+{source: 101, target: 88, distance: 45.643232889033264},
+{source: 101, target: 96, distance: 10.616766738774023},
+{source: 101, target: 97, distance: 11.292891227307097},
+{source: 101, target: 98, distance: 13.244358953782173},
+{source: 101, target: 99, distance: 14.103376651929871},
+{source: 101, target: 100, distance: 1.4308337439959533},
+]
+
+
+var index = 10;
+var svg = d3.select("svg"),
+    width = +svg.attr("width"),
+    height = +svg.attr("height"),
+    node,
+    link;
+
+var simulation = d3.forceSimulation()
+    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(function(d) {return d.distance;}).strength(0.9))
+    .force("charge", d3.forceManyBody())
+    .force("center", d3.forceCenter(width / 2, height / 2));
+
+//---update();
+//---function update() {
+  link = svg.selectAll(".link")
+    .data(links, function(d) { return d.target.id; })
+
+  link = link.enter()
+    .append("line")
+    .attr("class", "link");
+
+  node = svg.selectAll(".node")
+    .data(nodes, function(d) { return d.id; })
+
+  node = node.enter()
+    .append("g")
+    .attr("class", "node")
+    .on("click", click)
+    .call(d3.drag()
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended));
+
+  node.append("circle")
+    .attr("r", 4.5)
+
+  node.append("title")
+      .attr("fill", "#fff")
+      .text(function(d) { return d.name; });
+
+  node.append("text")
+      .attr('x', 24)
+      .attr("dy", ".35em")
+      .text(function(d) { return d.name; });
+
+  node.append("image")
+      .attr("xlink:href", "http://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/beer-icon.png")
+      .attr("x", -8)
+      .attr("y", -8)
+      .attr("width", 32)
+      .attr("height", 32);
+
+
+  simulation
+      .nodes(nodes)
+      .on("tick", ticked);
+
+  simulation.force("link")
+      .links(links);
+//---}
+
+function click(d) {
+  /*nodes.push({id: index, name: "server " + index});
+  links.push({source: d.id, target: index});
+  index++; */
+  var nam = d.name
+  window.location = "/"+nam.toLowerCase().split(' ').join('_');
+
+  //---update();
+}
+
+function ticked() {
+  link
+      .attr("x1", function(d) { return d.source.x; })
+      .attr("y1", function(d) { return d.source.y; })
+      .attr("x2", function(d) { return d.target.x; })
+      .attr("y2", function(d) { return d.target.y; });
+
+  node
+      .attr("transform", function(d) { return "translate(" + d.x + ", " + d.y + ")"; });
+}
+
+function dragstarted(d) {
+  if (!d3.event.active) simulation.alphaTarget(0.3).restart()
+}
+
+function dragged(d) {
+  d.fx = d3.event.x;
+  d.fy = d3.event.y;
+}
+
+function dragended(d) {
+  if (!d3.event.active) simulation.alphaTarget(0);
+  d.fx = undefined;
+  d.fy = undefined;
+}
+</script>
+
+
+
+{% if request.user.is_authenticated %}
+    <div class="search_res">
+        <p style="margin-top: 100px; margin-left: 20px">You'll like these:</p>
+    <ul>
+    {% for i in recs %}
+        <li>
+            {{ i|safe }}
+        </li>
+    {% endfor %}
+    </ul>
+    </div>
+    {% else %}
+    {% endif %}
+
 {% endblock %}

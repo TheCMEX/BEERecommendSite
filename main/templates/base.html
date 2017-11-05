@@ -9,9 +9,9 @@
 <body>
 <div class = 'header'>
 
-    {% if logged %}
+    {% if request.user.is_authenticated %}
         <div class="logout">
-        <p>{{ username }}</p>
+        <p>{{ request.user.username }}</p>
         <p><a href="/logout"><strong>выйти</strong></a></p>
         </div>
     {%else%}
