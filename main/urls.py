@@ -8,6 +8,6 @@ urlpatterns = [
     url(r'^$', homepage),
     url(r'^logout$', logout_view),
     url(r'^search$', beersearch),
-    url(r'^api/mark/$', apimark),
+    url(r'^api/mark$', apimark),
     url(r'^(?P<name>[\w-]+)/$', make_url.as_view()),
 ]
